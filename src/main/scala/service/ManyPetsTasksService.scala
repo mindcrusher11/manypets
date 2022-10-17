@@ -40,7 +40,7 @@ object ManyPetsTasksService {
     policy.createOrReplaceTempView("policy")
     val breedData = policy.sqlContext.sql("Select uuid ,explode(data.insured_entities.breed) AS breed from policy")
     val avgClaimByBreed = breedData.join(claims,breedData("uuid") === claims("uuid_policy"), "inner")
-      .groupBy("breed").avg("payout")
+      .groupBy("breed").avg("payout").as("payout")
     avgClaimByBreed
   }
 }
