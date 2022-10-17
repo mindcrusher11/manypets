@@ -21,10 +21,21 @@ import org.manypets.cam.utils.HelpersFunctions.{flattenDataframe, recurs}
 
 object Main {
   def main(args: Array[String]): Unit = {
+
+    SparkConfig.getSparkSession.sparkContext.setLogLevel("ERROR")
+
     val claimsData = ReadFiles.readCSVFile(
       Option("/partition/DE_test_data_sets/DE_test_claims.csv"))
     val policyData = ReadFiles.readJsonFile(
       Option("/partition/DE_test_data_sets/lesspolicies"))
+
+    ManyPetsTasksService.getDifferentPolicies(policyData).show()
+
+    ManyPetsTasksService.getAvgPetsPerPolicy(policyData).show()
+
+    ManyPetsTasksService.getMostPopularBreed(policyData).show()
+
+    ManyPetsTasksService.claimedPolicyCount(claimsData).show()
 
     ManyPetsTasksService
       .AvgClaimValueByBreed(policyData, claimsData)
