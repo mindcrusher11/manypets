@@ -19,5 +19,5 @@ object Versions {
   val log4japi = "2.18.0"
   val log4jcore = "2.18.0"
   val log4japiscala = "12.0"
-
+  val scalafmtplugin = "3.6.0"
 }

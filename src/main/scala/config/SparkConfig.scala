@@ -6,13 +6,14 @@ import org.apache.spark.sql.{SQLContext, SparkSession}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.{SparkConf, SparkContext}
 import utils.Constants
+
 /**
- * Class for implementing Spark configurations
- *
- * @author Gaurhari
- *
- * */
-object SparkConfig extends TConfig{
+  * Class for implementing Spark configurations
+  *
+  * @author Gaurhari
+  *
+  * */
+object SparkConfig extends TConfig {
 
   private val batchDuration = Seconds(Constants.batchDuration)
 
@@ -44,6 +45,5 @@ object SparkConfig extends TConfig{
     streamingContext.checkpoint(Constants.checkPointDir)
     streamingContext
   }
-
 
 }

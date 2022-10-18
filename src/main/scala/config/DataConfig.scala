@@ -1,20 +1,22 @@
 package org.manypets.cam
 package config
 
-import org.manypets.cam.iservice.TConfig
+import iservice.TConfig
+import utils.Constants
+
 import com.typesafe.config.{Config, ConfigFactory}
 
 import java.io.File
 
 /**
- * Class for loading configurations from application.conf file
- *
- * Variables and other cluster information
- *
- * @author Gaurhari
- *
- * */
-object DataConfig extends TConfig{
+  * Class for loading configurations from application.conf file
+  *
+  * Variables and other cluster information
+  *
+  * @author Gaurhari
+  *
+  * */
+object DataConfig extends TConfig {
 
   private var conf: Config = null
 
@@ -25,7 +27,7 @@ object DataConfig extends TConfig{
    *
    * @return conf as Config object of typesafe
    * */
-  def getConfig(filePath: String = "/home/gaur/manypets/src/main/resources/application.conf"): Config = {
+  def getConfig(filePath: String = "application.conf"): Config = {
     if (conf == null)
       if (filePath.contains("/"))
         conf = ConfigFactory.parseFile(
