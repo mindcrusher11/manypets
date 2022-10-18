@@ -15,11 +15,11 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % Versions.spark,
   /*"org.apache.spark" %% "spark-hive" % Versions.spark,*/
   /*"com.databricks" %% "spark-csv" % Versions.dataBricksCsv,*/
-  "com.typesafe" % "config" % Versions.config
- /* "org.scalatest" %% "scalatest" % Versions.scalaTest % Test,
+  "com.typesafe" % "config" % Versions.config,
+  "org.scalatest" %% "scalatest" % Versions.scalaTest % Test,
   "org.scalacheck" %% "scalacheck" % Versions.scalaCheck % Test,
   "com.holdenkarau" %% "spark-testing-base" % Versions.sparkTestingBase % Test,
   "org.apache.logging.log4j" % "log4j-api" % Versions.log4japi,
   "org.apache.logging.log4j" % "log4j-core" % Versions.log4jcore,
-  "org.apache.logging.log4j" %% "log4j-api-scala" % Versions.log4japiscala*/
+  "org.apache.logging.log4j" %% "log4j-api-scala" % Versions.log4japiscala
 )

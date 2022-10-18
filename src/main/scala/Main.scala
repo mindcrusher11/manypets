@@ -1,33 +1,18 @@
 package org.manypets.cam
 
+import config.{DataConfig, SparkConfig}
 import service.{ManyPetsTasksService, ReadFiles}
-
-import breeze.linalg.sum
-import org.apache.spark.sql.catalyst.dsl.expressions.StringToAttributeConversionHelper
-import org.apache.spark.sql.functions.{
-  avg,
-  col,
-  count,
-  countDistinct,
-  desc,
-  explode,
-  length,
-  size
-}
-import org.manypets.cam.config.SparkConfig
-import org.manypets.cam.models.PolicyClaim
-import org.manypets.cam.utils.HelpersFunctions
-import org.manypets.cam.utils.HelpersFunctions.{flattenDataframe, recurs}
+import utils.Constants
 
 object Main {
   def main(args: Array[String]): Unit = {
 
-    SparkConfig.getSparkSession.sparkContext.setLogLevel("ERROR")
+    SparkConfig.getSparkSession.sparkContext.setLogLevel(Constants.error)
 
     val claimsData = ReadFiles.readCSVFile(
-      Option("/partition/DE_test_data_sets/DE_test_claims.csv"))
+      Option(DataConfig.getConfig().getString("file.claimsPath")))
     val policyData = ReadFiles.readJsonFile(
-      Option("/partition/DE_test_data_sets/lesspolicies"))
+      Option(DataConfig.getConfig().getString("file.policiesPath")))
 
     ManyPetsTasksService.getDifferentPolicies(policyData).show()
 

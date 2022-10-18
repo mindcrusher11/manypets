@@ -1,7 +1,9 @@
 package org.manypets.cam
 package config
 
-import org.manypets.cam.iservice.TConfig
+import iservice.TConfig
+import utils.Constants
+
 import com.typesafe.config.{Config, ConfigFactory}
 
 import java.io.File
@@ -36,5 +38,3 @@ object DataConfig extends TConfig {
   }
 
 }
-
-///home/gaur/manypets/src/main/resources/
