@@ -26,9 +26,11 @@ object QuantexxaService {
   def getMonthlyFlights(inputData: DataFrame): DataFrame = {
 
     val monthlyFlights = inputData
-      .groupBy(month(col("date")).alias("month"))
+      .groupBy(
+        month(col(QuantexxaConstants.dateColumn)).alias(
+          QuantexxaConstants.monthColumn))
       .count()
-      .alias("numberOfFlights")
+      .alias(QuantexxaConstants.numberOfFlightsColumn)
 
     monthlyFlights
 

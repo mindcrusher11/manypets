@@ -16,5 +16,8 @@ object QuantexxaConstants {
   val countriesColumn = "countries"
   val longestRunColumn = "longestRun"
   val countColumn = "count"
+  val dateColumn = "date"
+  val monthColumn = "month"
+  val numberOfFlightsColumn = "numberOfFlights"
 
 }
