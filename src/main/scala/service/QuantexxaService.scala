@@ -3,6 +3,8 @@ package service
 
 import org.apache.spark.sql.{DataFrame, functions}
 import org.apache.spark.sql.functions._
+import org.manypets.cam.config.DataConfig
+import org.manypets.cam.utils.QuantexxaConstants
 import java.sql.Date
 
 /*
@@ -22,12 +24,16 @@ object QuantexxaService {
    * @return DataFrame
    * */
   def getMonthlyFlights(inputData: DataFrame): DataFrame = {
+
     val monthlyFlights = inputData
-      .groupBy(month(col("date")).alias("month"))
+      .groupBy(
+        month(col(QuantexxaConstants.dateColumn)).alias(
+          QuantexxaConstants.monthColumn))
       .count()
-      .alias("Number of Flights")
+      .alias(QuantexxaConstants.numberOfFlightsColumn)
 
     monthlyFlights
+
   }
 
   /*
@@ -41,17 +47,19 @@ object QuantexxaService {
    * */
   def getFrequentFlyers(inputData: DataFrame,
                         flyersData: DataFrame): DataFrame = {
+
     val passengersCount = inputData
-      .groupBy("passengerId")
+      .groupBy(QuantexxaConstants.passengerIdColumn)
       .count()
-      .sort(col("count").desc)
+      .sort(col(QuantexxaConstants.countColumn).desc)
       .limit(100)
 
     val frequentFlyers = flyersData
-      .join(passengersCount, "passengerId")
-      .sort(col("count").desc)
+      .join(passengersCount, QuantexxaConstants.passengerIdColumn)
+      .sort(col(QuantexxaConstants.countColumn).desc)
 
     frequentFlyers
+
   }
 
   /*
@@ -62,27 +70,31 @@ object QuantexxaService {
    * @return DataFrame
    * */
   def getPassengerMaxCountries(inputData: DataFrame): DataFrame = {
+
     val dataWithCountries = inputData
-      .groupBy("passengerId")
+      .groupBy(QuantexxaConstants.passengerIdColumn)
       .agg(
         // concat is for concatenate two lists of strings from columns "from" and "to"
         concat(
           // collect list gathers all values from the given column into array
-          collect_list(col("from")),
-          collect_list(col("to"))
-        ).name("countries")
+          collect_list(col(QuantexxaConstants.fromDateColumn)),
+          collect_list(col(QuantexxaConstants.toDateColumn))
+        ).name(QuantexxaConstants.countriesColumn)
       )
 
     val passengerLongestRuns = dataWithCountries.withColumn(
-      "longest_run",
+      "longestRun",
       size(
-        array_remove(array_distinct(col("countries")),
-                     col("countries").getItem(0)))
+        array_remove(array_distinct(col(QuantexxaConstants.countriesColumn)),
+                     col(QuantexxaConstants.countriesColumn).getItem(0)))
     )
+
     val passengerMaxCountries =
-      passengerLongestRuns.select("passengerId", "longest_run")
+      passengerLongestRuns.select(QuantexxaConstants.passengerIdColumn,
+                                  QuantexxaConstants.longestRunColumn)
 
     passengerMaxCountries
+
   }
 
   /*
@@ -96,21 +108,30 @@ object QuantexxaService {
    * */
   def getFlewTogetherPassengers(inputData: DataFrame,
                                 atLeastNTimes: Int): DataFrame = {
-    val flewTogetherPassegers = inputData
-      .as("df1")
-      .join(
-        inputData.as("df2"),
-        col("df1.passengerId") < col("df2.passengerId") && col("df1.flightId") === col(
-          "df2.flightId") &&
-          col("df1.date") === col("df2.date"),
-        "inner"
-      )
-      .groupBy(col("df1.passengerId"), col("df2.passengerId"))
-      .agg(count("*").as("flightsTogether"))
-      .filter(col("flightsTogether") > atLeastNTimes)
-      .sort(col("flightsTogether").desc)
+
+    val flewTogetherPassegers =
+      getCommonFlewTogetherDf(inputData, atLeastNTimes)
+        .groupBy(col("flightDf.passengerId"), col("flightDf1.passengerId"))
+        .agg(count("*").as("flightsTogether"))
+        .filter(col("flightsTogether") > atLeastNTimes)
+        .sort(col("flightsTogether").desc)
 
     flewTogetherPassegers
+  }
+
+  def getCommonFlewTogetherDf(inputData: DataFrame,
+                              atLeastNTimes: Int): DataFrame = {
+    val flewTogetherPassengers = inputData
+      .as("flightDf")
+      .join(
+        inputData.as("flightDf1"),
+        col("flightDf.passengerId") < col("flightDf1.passengerId") && col(
+          "flightDf.flightId") === col("flightDf1.flightId") &&
+          col("flightDf.date") === col("flightDf1.date"),
+        "inner"
+      )
+
+    flewTogetherPassengers
   }
 
   /*
@@ -129,21 +150,15 @@ object QuantexxaService {
                                       atLeastNTimes: Int,
                                       from: Date = null,
                                       to: Date = null): DataFrame = {
-    val flewTogetherPassengersByDate = inputData
-      .as("df1")
-      .join(
-        inputData.as("df2"),
-        col("df1.passengerId") < col("df2.passengerId") && col("df1.flightId") === col(
-          "df2.flightId") &&
-          col("df1.date") === col("df2.date"),
-        "inner"
-      )
-      .groupBy(col("df1.passengerId"), col("df2.passengerId"))
-      .agg(count("*").as("flightsTogether"),
-           min(col("df1.date")).as("from"),
-           max(col("df1.date")).as("to"))
-      .filter(col("from") > from && col("to") < to)
-      .sort(col("flightsTogether").desc)
+
+    val flewTogetherPassengersByDate =
+      getCommonFlewTogetherDf(inputData, atLeastNTimes)
+        .groupBy(col("flightDf.passengerId"), col("flightDf1.passengerId"))
+        .agg(count("*").as("flightsTogether"),
+             min(col("flightDf.date")).as("from"),
+             max(col("flightDf.date")).as("to"))
+        .filter(col("from") > from && col("to") < to)
+        .sort(col("flightsTogether").desc)
 
     flewTogetherPassengersByDate
   }
@@ -157,14 +172,14 @@ object QuantexxaService {
    * */
   def main(args: Array[String]): Unit = {
 
-    //reading flights data from csv file
+    // reading flights info data from csv file
     val flightsDf =
-      ReadFiles.readCSVFile(Option(
-        "/home/gaur/Downloads/Flight_Data_Assignment/Flight Data Assignment/flightData.csv"))
+      ReadFiles.readCSVFile(
+        Option(DataConfig.getConfig().getString("file.flightsDataPath")))
 
     // reading passengers info data from csv file
-    val passengerInfo = ReadFiles.readCSVFile(Option(
-      "/home/gaur/Downloads/Flight_Data_Assignment/Flight Data Assignment/passengers.csv"))
+    val passengerInfo = ReadFiles.readCSVFile(
+      Option(DataConfig.getConfig().getString("file.passengersDataPath")))
 
     getMonthlyFlights(flightsDf).show
     getFrequentFlyers(flightsDf, passengerInfo).show
