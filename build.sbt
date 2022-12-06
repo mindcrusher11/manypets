@@ -23,3 +23,11 @@ libraryDependencies ++= Seq(
   "org.apache.logging.log4j" % "log4j-core" % Versions.log4jcore,
   "org.apache.logging.log4j" %% "log4j-api-scala" % Versions.log4japiscala
 )
+
+Test / parallelExecution := false
+
+ThisBuild / assemblyMergeStrategy := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x                             => MergeStrategy.first
+}
+Global / excludeLintKeys ++= Set(assemblyMergeStrategy, idePackagePrefix)
