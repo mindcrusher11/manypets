@@ -6,7 +6,7 @@
  * */
 object Versions {
 
-  val spark = "2.4.5"
+  val spark = "2.4.6"
   val sparkTestingBase = "2.4.5_0.14.0"
   val pprint = "0.5.0"
   val scalaTest = "3.0.3"
