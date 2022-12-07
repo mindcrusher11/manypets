@@ -71,7 +71,7 @@ sbt package
 Code can run in cluster using command below
 
 ```
-spark-submit --class "manypetsspark" --master local[4] .target/scala-2.11/manypets_2.11-0.1.0-SNAPSHOT.jar 
+spark-submit --class org.manypets.cam.service.QuantexxaService  --master local[4] .target/scala-2.11/manypets_2.11-0.1.0-SNAPSHOT.jar 
 ```
 
 ** Logging is pending
