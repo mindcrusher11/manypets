@@ -45,10 +45,10 @@ sbt "runMain org.manypets.cam.service.QuantexxaService"
 Run test cases using 
 
 ```
-sbt test 
+sbt "testOnly org.manypets.cam.QuantexxaTests -- -z Testing"
 ```
 
-3 test cases are defined which will display as passed.
+1 test case is defined which will display as passed.
 
 
 Scala Docs for this project can be generated using command below in current porject parent directory.
