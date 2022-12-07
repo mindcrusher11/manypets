@@ -1,3 +1,85 @@
+# Quantexa
+
+Data Operations on sample data
+
+Download the code using command below.
+
+```
+git clone https://github.com/mindcrusher11/manypets
+```
+I have used spark and scala for this project to provide scalable, distributed processing.
+
+Configuration settings are defined in application.conf file in resources foolder
+
+# Update flights and passengers data path with path of files in file section.
+```
+spark {
+  masterurl = "local[*]"
+  appName = "omicsspark"
+  checkpointDir = "./checkpoint"
+  batchDuration = "15"
+}
+
+
+file {
+  writeformat = "com.databricks.spark.csv"
+  claimsPath = "/partition/DE_test_data_sets/DE_test_claims.csv"
+  policiesPath = "/partition/DE_test_data_sets/policies"
+  flightsDataPath = "/home/gaur/Downloads/Flight_Data_Assignment/Flight Data Assignment/flightData.csv"
+  passengersDataPath = "/home/gaur/Downloads/Flight_Data_Assignment/Flight Data Assignment/passengers.csv"
+}
+```
+define master url to run on local or cluster
+update paths for claims data and policy data.
+
+Once it is updated it can be run using 
+
+sbt tool for scala need to be installed.
+
+# Run Quantexa Tasks
+
+```
+sbt "runMain org.manypets.cam.service.QuantexxaService"
+```
+
+Run test cases using 
+
+```
+sbt test 
+```
+
+3 test cases are defined which will display as passed.
+
+
+Scala Docs for this project can be generated using command below in current porject parent directory.
+```
+sbt doc
+```
+It will generate index.html file as "target/scala-2.11/api/index.html".
+
+It can be opened in the browser.
+
+Project can be run using jar file
+
+Steps to create jar file 
+
+
+```
+sbt package
+```
+
+Code can run in cluster using command below
+
+```
+spark-submit --class "manypetsspark" --master local[4] .target/scala-2.11/manypets_2.11-0.1.0-SNAPSHOT.jar 
+```
+
+** Logging is pending
+
+Output will be like
+
+
+
 # manypets
 Data Operations on sample data
 
