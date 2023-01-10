@@ -77,7 +77,7 @@ object QuantexxaService {
         .split("uk")
         .filter(_.nonEmpty)
         .map(_.trim)
-        .map(s => s.split(">").length)
+        .map(s => s.split(">").distinct.length)
         .max)
 
   val triplist = udf(
