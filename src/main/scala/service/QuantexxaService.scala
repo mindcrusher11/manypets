@@ -93,13 +93,13 @@ object QuantexxaService {
    * */
   def getPassengerMaxCountries(inputData: DataFrame): DataFrame = {
 
-    //.filter(col("from") === "uk")
+    /*    //.filter(col("from") === "uk")
     val oneiddf =
       inputData.filter(col(QuantexxaConstants.passengerIdColumn) === 7253)
 
-    oneiddf.show(20, false)
+    oneiddf.show(20, false)*/
 
-    val dataWithCountries = oneiddf
+    val dataWithCountries = inputData
       .groupBy(QuantexxaConstants.passengerIdColumn)
       .agg(
         // concat is for concatenate two lists of strings from columns "from" and "to"
@@ -117,25 +117,11 @@ object QuantexxaService {
                   triplist(col(QuantexxaConstants.countriesColumn)))
       .show(20, false)
 
-    dataWithCountries
+    val passengerLongestRuns = dataWithCountries
       .withColumn(QuantexxaConstants.longestRunColumn,
                   removeuk(col(QuantexxaConstants.countriesColumn)))
-      .show(20, false)
-
-    val passengerLongestRuns = dataWithCountries.withColumn(
-      QuantexxaConstants.longestRunColumn,
-      size(
-        array_remove(array_distinct(col(QuantexxaConstants.countriesColumn)),
-                     "uk"))
-    )
 
     passengerLongestRuns
-
-    /*val passengerMaxCountries =
-      passengerLongestRuns.select(QuantexxaConstants.passengerIdColumn,
-                                  QuantexxaConstants.longestRunColumn)
-
-    passengerMaxCountries*/
 
   }
 
