@@ -14,10 +14,11 @@ object QuantexxaConstants {
   val fromDateColumn = "from"
   val toDateColumn = "to"
   val countriesColumn = "countries"
-  val longestRunColumn = "longestRun"
+  val longestRunColumn = "maxCountries"
   val countColumn = "count"
   val dateColumn = "date"
   val monthColumn = "month"
   val numberOfFlightsColumn = "numberOfFlights"
+  val ukCountry = "uk"
 
 }

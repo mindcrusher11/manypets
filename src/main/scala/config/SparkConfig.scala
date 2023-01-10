@@ -19,7 +19,7 @@ object SparkConfig extends TConfig {
 
   private lazy val conf: SparkConf =
     new SparkConf()
-      .set("spark.streaming.backpressure.enabled", "true")
+  //.set("spark.streaming.backpressure.enabled", "true")
   /*.set(
         "fs.hdfs.impl", classOf[org.apache.hadoop.hdfs.DistributedFileSystem].getName
       )*/
@@ -32,7 +32,7 @@ object SparkConfig extends TConfig {
     .getOrCreate()
 
   def getSparkSession = {
-    // sparkSession.sparkContext.setLogLevel("OFF")
+    sparkSession.sparkContext.setLogLevel("OFF")
     sparkSession
   }
 
