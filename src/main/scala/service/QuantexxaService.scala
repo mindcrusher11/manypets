@@ -63,25 +63,27 @@ object QuantexxaService {
 
   }
 
-  def longestRun(sq: Seq[String]): Int = {
-    sq.mkString(" ")
-      .split("uk")
-      .filter(_.nonEmpty)
-      .map(_.trim)
-      .map(s => s.split(" ").length)
-      .max
-  }
+  /*
+   *
+   * spark udf for remving uk from countries list
+   *
+   * @param Sequence of strings
+   *
+   * @return Column
+   *
+   * @author Gaurhari
+   * */
   val removeuk = udf(
     (xs: Seq[String]) =>
       xs.mkString(">")
-        .split("uk")
+        .split(QuantexxaConstants.ukCountry)
         .filter(_.nonEmpty)
         .map(_.trim)
         .map(s => s.split(">").distinct.length)
         .max)
 
   val triplist = udf(
-    (xs: Seq[String]) => xs.mkString("->")
+    (xs: Seq[String]) => xs.mkString(">")
   )
 
   /*
@@ -92,12 +94,6 @@ object QuantexxaService {
    * @return DataFrame
    * */
   def getPassengerMaxCountries(inputData: DataFrame): DataFrame = {
-
-    /*    //.filter(col("from") === "uk")
-    val oneiddf =
-      inputData.filter(col(QuantexxaConstants.passengerIdColumn) === 7253)
-
-    oneiddf.show(20, false)*/
 
     val dataWithCountries = inputData
       .groupBy(QuantexxaConstants.passengerIdColumn)
@@ -209,9 +205,9 @@ object QuantexxaService {
     val passengerInfo = ReadFiles.readCSVFile(
       Option(DataConfig.getConfig().getString("file.passengersDataPath")))
 
-    //getMonthlyFlights(flightsDf).show
+    getMonthlyFlights(flightsDf).show
     //getFrequentFlyers(flightsDf, passengerInfo).show
-    getPassengerMaxCountries(flightsDf).show
+    //getPassengerMaxCountries(flightsDf).show
     /*getFlewTogetherPassengers(flightsDf, 5).show
     getFlewTogetherPassengersByDate(flightsDf,
                                     5,
