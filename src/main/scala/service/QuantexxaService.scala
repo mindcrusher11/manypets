@@ -73,11 +73,11 @@ object QuantexxaService {
   }
   val removeuk = udf(
     (xs: Seq[String]) =>
-      xs.mkString("->")
+      xs.mkString(">")
         .split("uk")
         .filter(_.nonEmpty)
         .map(_.trim)
-        .map(s => s.split("->").length)
+        .map(s => s.split(">").length)
         .max)
 
   val triplist = udf(
