@@ -1,10 +1,11 @@
 package org.manypets.cam
 package service
 
-import org.apache.spark.sql.{DataFrame, functions}
+import org.apache.spark.sql.{Column, DataFrame, functions}
 import org.apache.spark.sql.functions._
 import org.manypets.cam.config.DataConfig
 import org.manypets.cam.utils.QuantexxaConstants
+
 import java.sql.Date
 
 /*
@@ -27,10 +28,10 @@ object QuantexxaService {
 
     val monthlyFlights = inputData
       .groupBy(
-        month(col(QuantexxaConstants.dateColumn)).alias(
-          QuantexxaConstants.monthColumn))
-      .count()
-      .alias(QuantexxaConstants.numberOfFlightsColumn)
+        month(col(QuantexxaConstants.dateColumn))
+          .alias(QuantexxaConstants.monthColumn))
+      .agg(countDistinct("flightId")
+        .alias(QuantexxaConstants.numberOfFlightsColumn))
 
     monthlyFlights
 
@@ -62,6 +63,27 @@ object QuantexxaService {
 
   }
 
+  def longestRun(sq: Seq[String]): Int = {
+    sq.mkString(" ")
+      .split("uk")
+      .filter(_.nonEmpty)
+      .map(_.trim)
+      .map(s => s.split(" ").length)
+      .max
+  }
+  val removeuk = udf(
+    (xs: Seq[String]) =>
+      xs.mkString("->")
+        .split("uk")
+        .filter(_.nonEmpty)
+        .map(_.trim)
+        .map(s => s.split("->").length)
+        .max)
+
+  val triplist = udf(
+    (xs: Seq[String]) => xs.mkString("->")
+  )
+
   /*
    * function to get maxcountries by passenger
    *
@@ -71,7 +93,13 @@ object QuantexxaService {
    * */
   def getPassengerMaxCountries(inputData: DataFrame): DataFrame = {
 
-    val dataWithCountries = inputData
+    //.filter(col("from") === "uk")
+    val oneiddf =
+      inputData.filter(col(QuantexxaConstants.passengerIdColumn) === 7253)
+
+    oneiddf.show(20, false)
+
+    val dataWithCountries = oneiddf
       .groupBy(QuantexxaConstants.passengerIdColumn)
       .agg(
         // concat is for concatenate two lists of strings from columns "from" and "to"
@@ -82,18 +110,32 @@ object QuantexxaService {
         ).name(QuantexxaConstants.countriesColumn)
       )
 
+    dataWithCountries.show(20, false)
+
+    dataWithCountries
+      .withColumn(QuantexxaConstants.longestRunColumn,
+                  triplist(col(QuantexxaConstants.countriesColumn)))
+      .show(20, false)
+
+    dataWithCountries
+      .withColumn(QuantexxaConstants.longestRunColumn,
+                  removeuk(col(QuantexxaConstants.countriesColumn)))
+      .show(20, false)
+
     val passengerLongestRuns = dataWithCountries.withColumn(
-      "longestRun",
+      QuantexxaConstants.longestRunColumn,
       size(
         array_remove(array_distinct(col(QuantexxaConstants.countriesColumn)),
-                     col(QuantexxaConstants.countriesColumn).getItem(0)))
+                     "uk"))
     )
 
-    val passengerMaxCountries =
+    passengerLongestRuns
+
+    /*val passengerMaxCountries =
       passengerLongestRuns.select(QuantexxaConstants.passengerIdColumn,
                                   QuantexxaConstants.longestRunColumn)
 
-    passengerMaxCountries
+    passengerMaxCountries*/
 
   }
 
@@ -181,14 +223,14 @@ object QuantexxaService {
     val passengerInfo = ReadFiles.readCSVFile(
       Option(DataConfig.getConfig().getString("file.passengersDataPath")))
 
-    getMonthlyFlights(flightsDf).show
-    getFrequentFlyers(flightsDf, passengerInfo).show
+    //getMonthlyFlights(flightsDf).show
+    //getFrequentFlyers(flightsDf, passengerInfo).show
     getPassengerMaxCountries(flightsDf).show
-    getFlewTogetherPassengers(flightsDf, 5).show
+    /*getFlewTogetherPassengers(flightsDf, 5).show
     getFlewTogetherPassengersByDate(flightsDf,
                                     5,
                                     Date.valueOf("2017-01-10"),
-                                    Date.valueOf("2017-05-12")).show
+                                    Date.valueOf("2017-05-12")).show*/
   }
 
 }
