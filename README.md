@@ -80,6 +80,27 @@ Output will be like
 
 ```
 
+Based on unique flightids if number of flights are according to flightIDs
+
++-----+---------------+
+|month|numberOfFlights|
++-----+---------------+
+|   12|             94|
+|    1|             97|
+|    6|             71|
+|    3|             82|
+|    5|             92|
+|    9|             85|
+|    4|             92|
+|    8|             76|
+|    7|             87|
+|   10|             76|
+|   11|             75|
+|    2|             73|
++-----+---------------+
+
+
+
 +-----+-----+
 |month|count|
 +-----+-----+
@@ -146,6 +167,33 @@ Output will be like
 |       3175|          10|
 |       3749|           8|
 +-----------+------------+
+
+Updated after not in UK
+
++-----------+--------------------+------------+
+|passengerId|           countries|maxCountries|
++-----------+--------------------+------------+
+|        148|[co, ir, au, nl, ...|          11|
+|        463|[tk, pk, ca, ir, ...|           5|
+|        471|[tk, pk, il, ar, ...|           9|
+|        496|    [tk, pk, pk, ir]|           3|
+|        833|[ca, sg, bm, ch, ...|          14|
+|       1088|[dk, tj, jo, jo, ...|           6|
+|       1238|[cg, tj, tj, ir, ...|           8|
+|       1342|[fr, nl, nl, sg, ...|          12|
+|       1580|[se, tj, ir, jo, ...|           8|
+|       1591|[se, tj, dk, ar, ...|          12|
+|       1645|[us, pk, pk, tj, ...|           8|
+|       1829|[ar, il, tk, co, ...|          11|
+|       1959|[ca, cg, cg, cg, ...|           3|
+|       2122|[be, be, cn, cg, ...|           7|
+|       2142|[be, be, cn, cg, ...|           5|
+|       2366|[co, ir, no, ir, ...|           4|
+|       2659|[au, tj, uk, se, ...|           3|
+|       2866|    [dk, ir, ir, iq]|           3|
+|       3175|[fr, cn, at, pk, ...|          10|
+|       3749|[ar, bm, tj, ch, ...|           9|
++-----------+--------------------+------------+
 
 +-----------+-----------+---------------+-------------------+-------------------+
 |passengerId|passengerId|flightsTogether|               from|                 to|
