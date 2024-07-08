@@ -1,4 +1,125 @@
+# NBC Universal
 
+Data Operations on Sample Data
+
+Download the code using the command below.
+
+```
+git clone https://github.com/mindcrusher11/manypets
+```
+I have used Spark and scala for this project to provide scalable, distributed processing.
+
+Configuration settings are defined in the application.conf file in the resources folder
+
+# Update f1 racing data path [f1racingDataPath] with the path of files in the file section.
+```
+spark {
+  masterurl = "local[*]"
+  appName = "omicsspark"
+  checkpointDir = "./checkpoint"
+  batchDuration = "15"
+}
+
+
+file {
+  writeformat = "com.databricks.spark.csv"
+  claimsPath = "/partition/DE_test_data_sets/DE_test_claims.csv"
+  policiesPath = "/partition/DE_test_data_sets/policies"
+  flightsDataPath = "/home/gaur/Downloads/Flight_Data_Assignment/Flight Data Assignment/flightData.csv"
+  passengersDataPath = "/home/gaur/Downloads/Flight_Data_Assignment/Flight Data Assignment/passengers.csv"
+  f1racingDataPath = "/home/gaur/f1racing.csv"
+}
+```
+define master URL to run on local or cluster
+update paths for claims data and policy data.
+
+Once it is updated it can be run using 
+
+sbt tool for Scala needs to be installed.
+
+# Run NBCUniversal Tasks
+
+```
+sbt "runMain org.manypets.cam.service.NBCUniversalService"
+```
+
+Run test cases using 
+
+```
+sbt "testOnly org.manypets.cam.NBCUniversalTest -- -z Testing"
+```
+
+1 test case is defined which will display as passed.
+
+
+Scala Docs for this project can be generated using the command below in the current project parent directory.
+```
+sbt doc
+```
+It will generate index.html file as "target/scala-2.11/api/index.html".
+
+It can be opened in the browser.
+
+The project can be run using the jar file
+
+Steps to create jar file 
+
+
+```
+sbt package
+```
+
+Code can run in the cluster using the command below
+
+```
+spark-submit --class org.manypets.cam.service.NBCUniversalService  --master local[4] .target/scala-2.11/manypets_2.11-0.1.0-SNAPSHOT.jar 
+```
+
+** Logging is pending
+
+Output will be like
+
+```
+
+Driver with Time
+
+
++------------------+----+
+|            DRIVER|TIME|
++------------------+----+
+|    Max Verstappen|1.31|
+|    Lewis Hamilton|1.31|
+|      Pierre Gasly|1.32|
+|   Valtteri Bottas|1.31|
+|      Lando Norris|1.31|
+|   Charles Leclerc|1.31|
+|      Sergio Perez|1.32|
+|      Carlos Sainz|1.32|
+|  Daniel Ricciardo|1.32|
+|Antonio Giovinazzi|1.32|
+|    Kimi Räikkönen|1.33|
+|  Sebastian Vettel|1.33|
+|      Lance Stroll|1.33|
+|      Yuki Tsunoda|1.33|
+|      Esteban Ocon|1.33|
+|   Fernando Alonso|1.33|
+|    George Russell|1.34|
+|   Nicholas Latifi|1.34|
+|   Mick Schumacher|1.34|
+|    Nikita Mazepin|1.34|
++------------------+----+
+
+Driver with average time and fastest time.
+
++---------------+-------+--------+
+|         DRIVER|avgtime|fasttime|
++---------------+-------+--------+
+|Charles Leclerc|   1.24|    1.13|
+| Lewis Hamilton|   1.25|    1.11|
+|Fernando Alonso|   1.26|    1.13|
++---------------+-------+--------+
+
+```
 
 # Quantexa
 
