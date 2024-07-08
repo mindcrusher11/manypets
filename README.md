@@ -1,3 +1,5 @@
+
+
 # Quantexa
 
 Data Operations on sample data
@@ -27,6 +29,8 @@ file {
   policiesPath = "/partition/DE_test_data_sets/policies"
   flightsDataPath = "/home/gaur/Downloads/Flight_Data_Assignment/Flight Data Assignment/flightData.csv"
   passengersDataPath = "/home/gaur/Downloads/Flight_Data_Assignment/Flight Data Assignment/passengers.csv"
+  f1racingDataPath = "/home/gaur/f1racing.csv"
+
 }
 ```
 define master url to run on local or cluster
