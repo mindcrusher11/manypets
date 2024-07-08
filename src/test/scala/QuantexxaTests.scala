@@ -34,5 +34,4 @@ class QuantexxaTests extends FunSuite with SharedSparkContext with Checkers {
     check(property)
   }
 
-  test()
 }

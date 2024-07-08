@@ -3,11 +3,13 @@ package utils
 
 import config.DataConfig
 
+import com.typesafe.config.Config
+
 object Constants {
 
-  val config = DataConfig.getConfig()
+  val config: Config = DataConfig.getConfig()
 
-  val sparkMasterUrl = config.getString("spark.masterurl")
+  val sparkMasterUrl: String = config.getString("spark.masterurl")
   val sparkAppName = config.getString("spark.appName")
   val checkPointDir = config.getString("spark.checkpointDir")
   val batchDuration = config.getInt("spark.batchDuration")
@@ -49,3 +51,4 @@ object Constants {
   val uniquePolicyCount = "policyCount"
 
 }
+
