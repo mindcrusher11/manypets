@@ -2,16 +2,18 @@ package org.manypets.cam
 
 import com.holdenkarau.spark.testing.SharedSparkContext
 import org.apache.spark.sql.functions.{col, column}
-import org.manypets.cam.config.DataConfig
-import org.manypets.cam.service.{QuantexxaService, ReadFiles}
-import org.manypets.cam.utils.QuantexxaConstants
+import config.DataConfig
+import service.{QuantexxaService, ReadFiles}
+import utils.QuantexxaConstants
+
+import com.typesafe.config.Config
 import org.scalacheck.Prop.forAll
 import org.scalatest.FunSuite
 import org.scalatest.prop.Checkers
 
 class QuantexxaTests extends FunSuite with SharedSparkContext with Checkers {
 
-  val dataConfig = DataConfig.getConfig()
+  val dataConfig: Config = DataConfig.getConfig()
 
   def before(): Unit = {}
 
@@ -34,5 +36,4 @@ class QuantexxaTests extends FunSuite with SharedSparkContext with Checkers {
     check(property)
   }
 
-  test()
 }

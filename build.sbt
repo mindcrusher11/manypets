@@ -26,8 +26,31 @@ libraryDependencies ++= Seq(
 
 Test / parallelExecution := false
 
-ThisBuild / assemblyMergeStrategy := {
-  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-  case x                             => MergeStrategy.first
+Compile / run / mainClass := Some("org.manypets.cam.Main")
+
+ThisBuild / assemblyMergeStrategy in assembly := {
+  case x if x.contains("io.netty.versions.properties") => MergeStrategy.discard
+  case PathList(ps @ _*) if ps.last endsWith "AnnotatedFingerprint.class" =>
+    MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith "Event.class" =>
+    MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith "EventHandler.class" =>
+    MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith "Framework.class" =>
+    MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith "Result.class" =>
+    MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith "Fingerprint.class" =>
+    MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith "Logger.class" =>
+    MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith "Runner.class" =>
+    MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith "Runner2.class" =>
+    MergeStrategy.first
+  case x =>
+    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    oldStrategy(x)
 }
+
 Global / excludeLintKeys ++= Set(assemblyMergeStrategy, idePackagePrefix)
