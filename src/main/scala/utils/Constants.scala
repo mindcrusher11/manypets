@@ -4,6 +4,7 @@ package utils
 import config.DataConfig
 
 import com.typesafe.config.Config
+import org.manypets.cam.iservice.TSahajService
 
 object Constants {
 
@@ -29,6 +30,7 @@ object Constants {
    * */
   val fileSeparator = "sep"
   val commaSeparator = ","
+  val tabSeparator = "\t"
   val header = "header"
   val inferSchema = "inferSchema"
   val invalidPathExceptionMessage = "Please input valid path"
@@ -49,6 +51,28 @@ object Constants {
   val innerJoin = "inner"
   val claimedPoliciesCount = "claimedPoliciesCount"
   val uniquePolicyCount = "policyCount"
+
+
+  /*
+  * Sahaj Service Files Columns
+  * */
+  val priceColumn = "price"
+  val lastScrapedColumn = "last_scraped"
+  val lastScrapedMonthCol = "last_scraped_month"
+  val neighbourhoodCleansedCol = "neighbourhood_cleansed"
+  val idCol = "id"
+  val nameCol = "name"
+  val priceNumericCol = "price_numeric"
+  val neighborhoodAvgPriceCol = "neighborhood_avg_price"
+  val priceDifferenceCol = "price_difference"
+  val priceStatusCol = "price_status"
+  val avgPricePerNightCol = "avg_price_per_night"
+  val listingCountCol = "listing_count"
+  val overpriced = "Overpriced"
+  val underpriced = "Underpriced"
+  val average = "Average"
+
+
 
 }
 

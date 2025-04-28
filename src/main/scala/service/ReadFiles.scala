@@ -30,6 +30,12 @@ object ReadFiles extends TReadFiles {
           .option(Constants.fileSeparator, Constants.commaSeparator)
           .option(Constants.header, Constants.trueValue)
           .option(Constants.inferSchema, Constants.trueValue)
+          .option("escapeQuotes", "true")
+          .option("multiline", "true")
+          .option("quote", "\"")
+          .option("escape", "\"")
+          //.option("ignoreLeadingWhiteSpace", "true")
+          //.option("ignoreTrailingWhiteSpace", "true")
           .csv(x)
         segments
       }
